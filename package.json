@@ -17,8 +17,8 @@
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
     "@radix-ui/react-slot": "^1.1.0",
-    "@auth0/auth0-acul-js": "^0.1.0",
-    "@radix-ui/react-label": "^1.1.0"
+    "@radix-ui/react-label": "^1.1.0",
+    "@auth0/auth0-acul-js": "file:./src/lib/auth0-acul-js.js"
   },
   "devDependencies": {
     "@types/react": "^18.3.3",

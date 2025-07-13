@@ -12,6 +12,7 @@ mkdir -p public
 mkdir -p src/components/ui
 mkdir -p src/screens/login-id
 mkdir -p src/utils
+mkdir -p src/lib # New directory for the shim
 
 # 2. Create package.json
 echo "Creating package.json..."
@@ -35,8 +36,8 @@ cat << 'EOF' > package.json
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
     "@radix-ui/react-slot": "^1.1.0",
-    "@auth0/auth0-acul-js": "^0.1.0",
-    "@radix-ui/react-label": "^1.1.0"
+    "@radix-ui/react-label": "^1.1.0",
+    "@auth0/auth0-acul-js": "file:./src/lib/auth0-acul-js.js"
   },
   "devDependencies": {
     "@types/react": "^18.3.3",
@@ -63,7 +64,8 @@ cat << 'EOF' > jsconfig.json
     "paths": {
       "@/components/ui/*": ["./src/components/ui/*"],
       "@/common/*": ["./src/common/*"],
-      "@/utils/*": ["./src/utils/*"]
+      "@/utils/*": ["./src/utils/*"],
+      "@/lib/*": ["./src/lib/*"]
     },
     "jsx": "react-jsx",
     "target": "ESNext",
@@ -348,7 +350,84 @@ export function cn(...inputs) {
 }
 EOF
 
-# 11. Create Shadcn/ui components in src/components/ui
+# 11. Create src/lib/auth0-acul-js.js (NEW SHIM FILE)
+echo "Creating src/lib/auth0-acul-js.js..."
+cat << 'EOF' > src/lib/auth0-acul-js.js
+// src/lib/auth0-acul-js.js
+
+// This is a shim/mock for the @auth0/auth0-acul-js SDK
+// It provides placeholder classes and methods to allow local development
+// when the full Auth0 Universal Login context is not available.
+
+class BaseScreenProvider {
+  constructor() {
+    // Mimic the structure of the context object from Auth0
+    // In a real Auth0 environment, this would be populated by Auth0's system.
+    this.context = window.universal_login_context || {
+      screen: {
+        name: 'login-id',
+        texts: {
+          title: 'Welcome (Local Mock)',
+          description: 'Login to continue (Local Mock)',
+          emailPlaceholder: 'Enter your email (Local Mock)',
+          buttonText: 'Continue (Local Mock)',
+          footerText: "Don't have an account yet? (Local Mock)",
+          footerLinkText: "Create your account (Local Mock)",
+          forgottenPasswordText: "Forgot your Password? (Local Mock)",
+        },
+        data: {}, // Placeholder for data like pre-filled username
+      },
+      transaction: {
+        isSignupEnabled: true,
+        isForgotPasswordEnabled: true,
+      },
+      untrusted_data: {
+        submittedFormData: {}
+      }
+      // Add other context properties as needed for your screens
+    };
+
+    this.screen = this.context.screen;
+    this.transaction = this.context.transaction;
+    this.untrustedData = this.context.untrusted_data;
+
+    // Log a warning if running outside of Auth0 context
+    if (!window.universal_login_context) {
+      console.warn(
+        "Auth0 ACUL JS: Running in local mock mode. Full Auth0 context is not available."
+      );
+    }
+  }
+
+  getContext(key) {
+    return this.context[key];
+  }
+}
+
+export class LoginId extends BaseScreenProvider {
+  constructor() {
+    super();
+    console.log("LoginId Manager Initialized (Local Mock)");
+  }
+
+  async login(formData) {
+    console.log("LoginId.login() called with:", formData);
+    // Simulate a successful submission or a redirect
+    // In a real Auth0 environment, this would trigger a form submission/redirect.
+    alert("Login attempt (local mock): " + JSON.stringify(formData));
+    // For local testing, you might want to simulate a delay or an error
+    // await new Promise(resolve => setTimeout(resolve, 1000));
+    // throw new Error('Local mock login failed!');
+  }
+
+  async socialLogin(provider) {
+    console.log("LoginId.socialLogin() called with:", provider);
+    alert(`Social login with ${provider} (local mock)`);
+  }
+}
+EOF
+
+# 12. Create Shadcn/ui components in src/components/ui
 echo "Creating Shadcn/ui components in src/components/ui..."
 
 # src/components/ui/label.jsx
@@ -403,7 +482,7 @@ EOF
 # src/components/ui/button.jsx
 cat << 'EOF' > src/components/ui/button.jsx
 // src/components/ui/button.jsx
-import * => React from "react";
+import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva } from "class-variance-authority";
 
@@ -561,7 +640,7 @@ export {
 };
 EOF
 
-# 12. Create src/screens/login-id/index.jsx
+# 13. Create src/screens/login-id/index.jsx
 echo "Creating src/screens/login-id/index.jsx..."
 cat << 'EOF' > src/screens/login-id/index.jsx
 // src/screens/login-id/index.jsx
@@ -660,7 +739,7 @@ export default function LoginIdScreen() {
 }
 EOF
 
-# 13. Create src/App.jsx
+# 14. Create src/App.jsx
 echo "Creating src/App.jsx..."
 cat << 'EOF' > src/App.jsx
 // src/App.jsx
@@ -686,7 +765,7 @@ function App() {
 export default App;
 EOF
 
-# 14. Create src/main.jsx
+# 15. Create src/main.jsx
 echo "Creating src/main.jsx..."
 cat << 'EOF' > src/main.jsx
 // src/main.jsx
