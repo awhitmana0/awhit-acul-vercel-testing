@@ -65,13 +65,8 @@ export class LoginId extends BaseScreenProvider {
     // throw new Error('Local mock login failed!');
   }
 
-  // You can add other methods like socialLogin, passkeyLogin etc. if your screens use them
   async socialLogin(provider) {
     console.log("LoginId.socialLogin() called with:", provider);
     alert(`Social login with ${provider} (local mock)`);
   }
 }
-
-// Add other screen providers (e.g., LoginPassword, Signup) as needed
-// export class LoginPassword extends BaseScreenProvider { /* ... */ }
-// export class Signup extends BaseScreenProvider { /* ... */ }
