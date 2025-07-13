@@ -1,6 +1,6 @@
 // src/App.jsx
 import React from 'react';
-import { Button } from './components/ui/button'; # Import the Shadcn/ui Button
+import { Button } from './components/ui/button'; // Import the Shadcn/ui Button
 
 function App() {
   // This is where your Auth0 Lock/Login.js initialization logic would go

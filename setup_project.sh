@@ -8,6 +8,7 @@ echo "Starting project setup..."
 
 # 1. Create necessary directories
 echo "Creating directories..."
+# 'public' directory is still created for other static assets like vite.svg
 mkdir -p public
 mkdir -p src/components/ui
 mkdir -p src/lib
@@ -59,13 +60,11 @@ import react from '@vitejs/plugin-react';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  // Configure the base path for deployment if needed, e.g., if hosted under a sub-path
-  // For Vercel, the default '/' is usually fine.
-  // base: '/your-sub-path/',
+  // When index.html is at the project root, Vite automatically uses it as the entry.
+  // 'public' is also the default public directory, so publicDir doesn't need to be explicitly set
+  // unless you change its name.
   build: {
-    // Output directory for the build artifacts
     outDir: 'dist',
-    // Ensure that the output files are named consistently for Auth0 to consume
     rollupOptions: {
       output: {
         entryFileNames: `assets/[name].js`,
@@ -84,9 +83,9 @@ cat << 'EOF' > tailwind.config.js
 export default {
   // Specify files where Tailwind should look for classes
   content: [
-    "./index.html",
-    "./public/**/*.html", // Include public HTML files
-    "./src/**/*.{js,ts,jsx,tsx}", // Include all JS/TS/JSX/TSX files in src
+    "./index.html", # Now at the root
+    "./public/**/*.html", # Still include public HTML files if any other are added
+    "./src/**/*.{js,ts,jsx,tsx}", # Include all JS/TS/JSX/TSX files in src
     // Add paths for shadcn/ui components if they are in a specific folder
     "./src/components/**/*.{js,ts,jsx,tsx}",
   ],
@@ -94,7 +93,7 @@ export default {
     extend: {
       // Custom theme extensions, e.g., custom colors, fonts
       fontFamily: {
-        inter: ['Inter', 'sans-serif'], // Add Inter font
+        inter: ['Inter', 'sans-serif'], # Add Inter font
       },
     },
   },
@@ -146,9 +145,9 @@ build/
 .DS_Store
 EOF
 
-# 7. Create public/index.html
-echo "Creating public/index.html..."
-cat << 'EOF' > public/index.html
+# 7. Create index.html (now at the root)
+echo "Creating index.html in the root directory..."
+cat << 'EOF' > index.html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -207,7 +206,7 @@ import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva } from "class-variance-authority";
 
-import { cn } from "../../lib/utils"; # Adjust path if your utils.js is elsewhere
+import { cn } from "../../lib/utils"; // Adjust path if your utils.js is elsewhere
 
 const buttonVariants = cva(
   "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
@@ -260,7 +259,7 @@ cat << 'EOF' > src/main.jsx
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.jsx';
-import './index.css'; # Import your global CSS and Tailwind directives
+import './index.css'; // Import your global CSS and Tailwind directives
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -274,7 +273,7 @@ echo "Creating src/App.jsx..."
 cat << 'EOF' > src/App.jsx
 // src/App.jsx
 import React from 'react';
-import { Button } from './components/ui/button'; # Import the Shadcn/ui Button
+import { Button } from './components/ui/button'; // Import the Shadcn/ui Button
 
 function App() {
   // This is where your Auth0 Lock/Login.js initialization logic would go
