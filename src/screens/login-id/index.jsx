@@ -1,33 +1,94 @@
 // src/screens/login-id/index.jsx
-import React from 'react';
-import { Button } from '../../common/Button/Button.jsx'; // Corrected import path
+import React, { ChangeEvent, useEffect } from "react";
+import { LoginId as ScreenProvider } from "@auth0/auth0-acul-js";
 
-function LoginIdScreen() {
-  // This is the UI for your custom login-id page
+// UI Components - now imported from "@/components/ui"
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Text } from "@/components/ui/text";
+import { Link } from "@/components/ui/link";
+import {
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
+
+export default function LoginIdScreen() {
+  // Initialize the SDK for this screen
+  const screenProvider = new ScreenProvider();
+
+  // Handle the submit action
+  // Note: Using 'event' directly instead of 'ChangeEvent<HTMLFormElement>' for JS compatibility
+  const formSubmitHandler = (event) => {
+    event.preventDefault();
+
+    // grab the value from the form
+    // Note: Removed 'as HTMLInputElement' for JS compatibility
+    const identifierInput = event.target.querySelector("input#identifier");
+
+    // Call the SDK
+    screenProvider.login({ username: identifierInput?.value });
+  };
+
+  // Log component mount and initial state
+  useEffect(() => {
+    console.log('LoginIdScreen component mounted.');
+    console.log('Screen Data:', screenProvider.screen);
+    console.log('Transaction Data:', screenProvider.transaction);
+    console.log('Untrusted Data:', screenProvider.untrustedData);
+  }, []);
+
+  // Render the form
   return (
-    <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md text-center border border-gray-200">
-      <div className="mb-6">
-        {/* Placeholder for your logo. Auth0 Lock will use its own logo setting. */}
-        <img
-          src="https://placehold.co/120x60/667EEA/FFFFFF?text=Your+Logo"
-          alt="Company Logo"
-          className="mx-auto"
-        />
-      </div>
-      <h1 className="text-3xl font-bold text-gray-900 mb-4">Welcome to Our Service!</h1>
-      <p className="text-gray-600 mb-8">
-        This is your custom login page. The Auth0 login form will appear below.
-      </p>
-
-      {/* This is the crucial div where Auth0's Universal Login will inject its form. */}
-      <div id="auth0-login-container" className="space-y-4">
-        <p className="text-gray-500">Loading Auth0 login form...</p>
-        <Button className="w-full mt-4" variant="outline" onClick={() => console.log('Custom action button clicked!')}>
-          Need Help?
+    <form noValidate onSubmit={formSubmitHandler}>
+      <CardHeader>
+        <CardTitle className="mb-2 text-3xl font-medium text-center">
+          {screenProvider.screen.texts?.title ?? "Welcome"}
+        </CardTitle>
+        <CardDescription className="mb-8 text-center">
+          {screenProvider.screen.texts?.description ?? "Login to continue"}
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="mb-2 space-y-2">
+          <Label htmlFor="identifier">
+            {screenProvider.screen.texts?.emailPlaceholder ??
+              "Enter your email"}
+          </Label>
+          <Input
+            type="text"
+            id="identifier"
+            name="identifier"
+            defaultValue={
+              screenProvider.screen.data?.username ??
+              screenProvider.untrustedData.submittedFormData?.username
+            }
+          />
+        </div>
+        <Button type="submit" className="w-full">
+          {screenProvider.screen.texts?.buttonText ?? "Continue"}
         </Button>
-      </div>
-    </div>
+        <Text className="mb-2">
+          {screenProvider.screen.texts?.footerText ??
+            "Don't have an account yet?"}
+          <Link className="ml-1" href={screenProvider.screen.signupLink ?? "#"}>
+            {screenProvider.screen.texts?.footerLinkText ??
+              "Create your account"}
+          </Link>
+        </Text>
+        <Text>
+          Need Help?
+          <Link
+            className="ml-1"
+            href={screenProvider.screen.resetPasswordLink ?? "#"}
+          >
+            {screenProvider.screen.texts?.forgottenPasswordText ??
+              "Forgot your Password?"}
+          </Link>
+        </Text>
+      </CardContent>
+    </form>
   );
 }
-
-export default LoginIdScreen;

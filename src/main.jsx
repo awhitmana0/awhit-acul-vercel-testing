@@ -2,9 +2,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.jsx';
-import './index.css'; // Import your global CSS and Tailwind directives
+import './index.css';
 
-// Find the root element or create it if it doesn't exist
 let rootElement = document.getElementById('root');
 if (!rootElement) {
   rootElement = document.createElement('div');

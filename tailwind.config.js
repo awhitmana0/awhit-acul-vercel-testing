@@ -1,23 +1,75 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  // Specify files where Tailwind should look for classes
   content: [
-    "./index.html", // Now at the root
-    "./public/**/*.html", // Still include public HTML files if any other are added
-    "./src/**/*.{js,ts,jsx,tsx}", // Include all JS/TS/JSX/TSX files in src
-    // Explicitly include common and screens folders
+    "./index.html",
+    "./public/**/*.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+    "./src/components/ui/**/*.{js,ts,jsx,tsx}",
+    "./src/screens/**/*.{js,ts,jsx,tsx}",
     "./src/common/**/*.{js,ts,jsx,tsx}",
-    "./src/screens/**/*.{js,ts,jsx,tsx}", // This will now cover login-id and other screens
   ],
   theme: {
     extend: {
-      // Custom theme extensions, e.g., custom colors, fonts
       fontFamily: {
-        inter: ['Inter', 'sans-serif'], // Add Inter font
+        inter: ['Inter', 'sans-serif'],
+      },
+      colors: {
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        primary: {
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
+        },
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
+        },
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+        },
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
+      },
+      borderRadius: {
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
+      },
+      keyframes: {
+        "accordion-down": {
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
+        },
+        "accordion-up": {
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
+        },
+      },
+      animation: {
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
       },
     },
   },
   plugins: [
-    require("tailwindcss-animate") // Required for Shadcn/ui animations
+    require("tailwindcss-animate")
   ],
 }
