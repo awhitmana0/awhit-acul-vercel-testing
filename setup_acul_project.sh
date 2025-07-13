@@ -481,7 +481,7 @@ EOF
 
 # src/components/ui/button.jsx
 cat << 'EOF' > src/components/ui/button.jsx
-// src/components/ui/button.jsx
+# src/components/ui/button.jsx
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva } from "class-variance-authority";
