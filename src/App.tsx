@@ -1,13 +1,26 @@
-import LoginId from './screens/login-id';
-import './index.css';
+import { useEffect, Suspense, useState } from "react";
+import { getCurrentScreen } from "@auth0/auth0-acul-js";
+import { getScreenComponent } from "@/utils/screen/screenLoader";
 
-function App() {
+const App = () => {
+  const [screen, setScreen] = useState("login-id");
+
+  useEffect(() => {
+    const current = getCurrentScreen();
+    setScreen(current || "login-id");
+  }, []);
+
+  const ScreenComponent = getScreenComponent(screen);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100 p-4">
-      {/* LoginId now includes the Card component itself */}
-      <LoginId />
-    </div>
+    <Suspense fallback={<div>Loading...</div>}>
+      {ScreenComponent ? (
+        <ScreenComponent />
+      ) : (
+        <div>Screen "{screen}" not implemented yet</div>
+      )}
+    </Suspense>
   );
-}
+};
 
 export default App;
