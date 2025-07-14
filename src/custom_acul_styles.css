@@ -1,0 +1,11 @@
+body {
+  background-color: #3498db; /* Your desired background color */
+  /* Add any other specific overrides here */
+}
+
+/* Example: If you wanted to change the card background */
+/*
+.card {
+  background-color: #f0f0f0 !important;
+}
+*/

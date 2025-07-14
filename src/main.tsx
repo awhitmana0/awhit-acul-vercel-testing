@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
+import "./custom-acul-styles.css"; // <-- NEW IMPORT HERE
 import { loadAndSetMockContext } from "@/utils/screen/mockContextLoader";
 
 async function initializeApp() {
