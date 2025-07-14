@@ -2,9 +2,9 @@ import React, { useEffect, Suspense } from "react";
 import { getCurrentScreen } from "@auth0/auth0-acul-js";
 
 // Lazy load screen components for better performance
-const LoginIdScreen = React.lazy(() => import("./screens/LoginId"));
-const LoginPasswordScreen = React.lazy(() => import("./screens/LoginPassword"));
-const LoginPasswordlessEmailCodeScreen = React.lazy(() => import("./screens/LoginPasswordlessEmailCode"));
+const LoginIdScreen = React.lazy(() => import("./screens/login-id"));
+// const LoginPasswordScreen = React.lazy(() => import("./screens/LoginPassword"));
+// const LoginPasswordlessEmailCodeScreen = React.lazy(() => import("./screens/LoginPasswordlessEmailCode"));
 
 const App: React.FC = () => {
   const [screen, setScreen] = React.useState("");
@@ -26,10 +26,10 @@ const App: React.FC = () => {
     switch (screen) {
       case "login-id":
         return <LoginIdScreen />;
-      case "login-password":
-        return <LoginPasswordScreen />;
-      case "login-passwordless-email-code":
-        return <LoginPasswordlessEmailCodeScreen />;
+      // case "login-password":
+      //   return <LoginPasswordScreen />;
+      // case "login-passwordless-email-code":
+      //   return <LoginPasswordlessEmailCodeScreen />;
       default:
         // Fallback for screens not explicitly handled or initial state
         return <>No screen rendered</>;
