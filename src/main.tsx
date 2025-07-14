@@ -21,7 +21,7 @@ async function initializeApp() {
   const isAculScreenPath =
     currentPath.includes("/login-id") ||
     currentPath.includes("/login-password") ||
-    currentPath.includes("/login-passwordless-email-code");
+    currentPath.includes("/login");
     // Add other ACUL screen paths as needed
 
   if (isAculScreenPath) {
