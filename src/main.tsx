@@ -13,9 +13,6 @@ if (!rootElement) {
   console.warn("Created missing '#root' element for React to render into.");
 }
 
-// Ensure rootElement is not null for createRoot
-// If it's still null after the check/creation, something is fundamentally wrong,
-// but TypeScript needs to know it's a valid HTMLElement.
 ReactDOM.createRoot(rootElement as HTMLElement).render(
   <React.StrictMode>
     <App />
