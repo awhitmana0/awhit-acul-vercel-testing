@@ -3,18 +3,16 @@ import react from "@vitejs/plugin-react";
 import { resolve } from "path";
 import fs from "fs";
 
-// Dynamically discover screen directories
+// Dynamically discover screen directories (keep this as is)
 const screensDir = resolve(__dirname, "src/screens");
 const screenEntries: Record<string, string> = {};
 
-// Only add screens that exist in the src/screens directory
 if (fs.existsSync(screensDir)) {
   const screenDirs = fs
     .readdirSync(screensDir, { withFileTypes: true })
     .filter((dirent) => dirent.isDirectory())
     .map((dirent) => dirent.name);
 
-  // Create an entry point for each screen
   screenDirs.forEach((screen) => {
     const entryFile = resolve(screensDir, screen, "index.tsx");
     if (fs.existsSync(entryFile)) {
@@ -23,7 +21,6 @@ if (fs.existsSync(screensDir)) {
   });
 }
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
   server: {
@@ -37,70 +34,32 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: {
-        ...screenEntries,
-        main: resolve(__dirname, "index.html"),
+        // We'll target a single main entry point for simplicity as per docs "index.js"
+        // This might need adjustment based on your 'screens' dynamic setup.
+        // For now, let's assume 'main' is your primary entry, and other screens are imported by it.
+        main: resolve(__dirname, "src/main.tsx"), // Point directly to main.tsx
       },
       output: {
-        // Screen-specific entries
-        entryFileNames: (chunkInfo) =>
-          screenEntries[chunkInfo.name]
-            ? `assets/${chunkInfo.name}/index.[hash].js`
-            : "assets/main.[hash].js",
-
-        // Chunks naming strategy
-        chunkFileNames: (chunkInfo) => {
-          const chunkName = chunkInfo.name || "";
-
-          // For screen-specific chunks
-          const screenMatch = Object.keys(screenEntries).find((screen) =>
-            chunkName.startsWith(`${screen}-`),
-          );
-
-          if (screenMatch) {
-            return `assets/${screenMatch}/chunk.[hash].js`;
-          }
-
-          // For shared chunks, use a simplified naming scheme
-          return "assets/shared/[name].[hash].js";
-        },
-
-        // Assets naming (CSS, images, etc)
-        assetFileNames: (assetInfo) => {
-          const info = assetInfo.name || "";
-          if (info.endsWith(".css")) {
-            return "assets/shared/style.[hash][extname]";
-          }
-          return "assets/shared/[name].[hash][extname]";
-        },
-
-        // Simplified manual chunks strategy with forced common chunk
-        manualChunks: (id) => {
-          // All node_modules dependencies go into a single vendor chunk
-          if (id.includes("node_modules")) {
-            return "vendor";
-          }
-
-          // Everything in src/ but NOT in src/screens/ goes to common
-          // Note: resolve(id) converts to absolute path for reliable checking
-          const absoluteId = resolve(id);
-          const absoluteSrcScreensDir = resolve(__dirname, "src/screens");
-
-          if (
-            absoluteId.includes(resolve(__dirname, "src/")) &&
-            !absoluteId.startsWith(absoluteSrcScreensDir + "/")
-          ) {
-            return "common";
-          }
-
-          // For screen-specific code or other cases, let Rollup decide
-          return undefined;
-        },
+        // Set the format to UMD or IIFE
+        // UMD is generally more flexible, IIFE is simpler if no external global dependencies.
+        // Let's try 'umd' first as it's common for bundles loaded directly.
+        format: 'umd',
+        name: 'Auth0CustomLoginBundle', // A global variable name your bundle will expose (can be anything)
+        
+        // Ensure filenames are static (no hashes) as you requested and docs imply
+        entryFileNames: 'index.js', // Output main.js as index.js
+        chunkFileNames: 'chunks/[name].js', // Put other chunks in a 'chunks' subfolder
+        assetFileNames: 'assets/[name].[ext]', // For CSS and other assets
+        
+        // If your code relies on global variables (like React being available as 'window.React'),
+        // you might need a 'globals' map here, but often 'umd' handles common cases.
       },
     },
     minify: true,
     emptyOutDir: true,
-    cssCodeSplit: false, // Keep CSS in a single file
-    sourcemap: true,
+    // cssCodeSplit: false, // Keep CSS in a single file - already configured
+    // sourcemap: true, // Keep sourcemaps if desired for debugging, but remove for production
+    cssCodeSplit: false, // Ensure all CSS is bundled into one file as style.css
   },
   logLevel: "info",
 });
