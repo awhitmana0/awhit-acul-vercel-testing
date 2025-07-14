@@ -1,11 +1,89 @@
-body {
-  background-color: #3498db; /* Your desired background color */
-  /* Add any other specific overrides here */
+/* Ensure HTML and Body take full viewport and have no default margins/paddings */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  /* Prevent unwanted scrollbars if content perfectly fits */
+  overflow: hidden;
+  /* Set font family for the entire page if not already handled by Tailwind/boilerplate */
+  font-family: 'Inter', sans-serif; /* Example, use your desired font */
 }
 
-/* Example: If you wanted to change the card background */
-/*
-.card {
-  background-color: #f0f0f0 !important;
+/* Overall page background color */
+body {
+  background-color: #f2f2f2; /* Light gray from your new screenshot */
+  /* Make body the flex container for the split layout */
+  display: flex;
+  min-height: 100vh; /* Ensure it takes full viewport height */
+  width: 100vw; /* Ensure it takes full viewport width */
 }
-*/
+
+/* Main container for the split layout, rendered by App.tsx */
+.acul-split-layout {
+  display: flex; /* Use flexbox for side-by-side layout */
+  min-height: 100vh; /* Ensure it takes full viewport height */
+  width: 100vw; /* Ensure it takes full viewport width */
+}
+
+/* Styles for the Left Panel (Static content: "Acme Inc", "Login", etc.) */
+.acul-left-panel {
+  flex: 1; /* Allow it to grow and take available space */
+  background-color: white; /* Left panel background */
+  padding: 40px; /* Adjust padding as needed */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Pushes logo/login to top, quote (if any) to bottom */
+  align-items: flex-start; /* Aligns content to the left within the panel */
+}
+
+.acul-logo {
+  font-size: 24px;
+  font-weight: bold;
+  color: black;
+  width: 100%; /* Allows space-between to work within this container */
+  display: flex;
+  justify-content: space-between; /* Pushes "Acme Inc" text to left, "Login" link to right */
+  align-items: center;
+}
+
+.acul-login-link {
+  color: black; /* Or your link color */
+  text-decoration: none;
+  font-size: 16px;
+  /* This link is now part of the .acul-logo flex container */
+}
+
+/* Styles for the Right Panel (Where your login forms will sit) */
+.acul-right-panel {
+  flex-shrink: 0; /* Prevent it from shrinking */
+  width: 500px; /* Fixed width for the form section, adjust as needed */
+  background-color: white; /* Background for the form card itself */
+  display: flex;
+  justify-content: center; /* Center form content horizontally within its panel */
+  align-items: center; /* Center form content vertically within its panel */
+  padding: 20px; /* Padding inside this panel */
+  box-shadow: -5px 0 15px rgba(0,0,0,0.05); /* Subtle shadow on the left edge */
+  box-sizing: border-box; /* Include padding in the width calculation */
+}
+
+/* Styling for the Card component (assuming it has a 'card' class or is targeted by its structure) */
+/* If the Card component itself already has 'w-full max-w-[400px]', these might not be needed
+   or might need !important to override Tailwind defaults. */
+.card {
+    /* Ensure the card takes full width of its container, up to a max-width */
+    width: 100%;
+    max-width: 400px; /* Keep max-width as it was in your original card */
+    /* Add any other card specific styles like rounded corners, padding, etc. */
+    border-radius: 0.5rem; /* Example: rounded corners */
+    padding: 2rem; /* Example: internal padding */
+}
+
+/* Override default styles from the original boilerplate's screen containers if they conflict */
+/* This targets the specific classes that were on the outer div of LoginIdScreen */
+.min-h-screen.flex.items-center.justify-center.px-10.py-20 {
+    min-height: auto !important; /* Override min-height to not force full screen */
+    display: block !important; /* Override flex centering */
+    padding: 0 !important; /* Remove excessive padding */
+    width: 100%; /* Ensure it takes full width of its parent .acul-form-panel */
+    box-sizing: border-box; /* Include padding in width */
+}

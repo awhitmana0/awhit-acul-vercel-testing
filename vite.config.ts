@@ -3,7 +3,7 @@ import react from "@vitejs/plugin-react";
 import { resolve } from "path";
 import fs from "fs";
 
-// Dynamically discover screen directories (keep this as is)
+// Dynamically discover screen directories (kept as is)
 const screensDir = resolve(__dirname, "src/screens");
 const screenEntries: Record<string, string> = {};
 
@@ -34,32 +34,28 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: {
-        // We'll target a single main entry point for simplicity as per docs "index.js"
-        // This might need adjustment based on your 'screens' dynamic setup.
-        // For now, let's assume 'main' is your primary entry, and other screens are imported by it.
-        main: resolve(__dirname, "src/main.tsx"), // Point directly to main.tsx
+        // Point to the main entry file that renders your App component.
+        // This will be the primary bundle output as 'index.js'.
+        main: resolve(__dirname, "src/main.tsx"),
       },
       output: {
-        // Set the format to UMD or IIFE
-        // UMD is generally more flexible, IIFE is simpler if no external global dependencies.
-        // Let's try 'umd' first as it's common for bundles loaded directly.
+        // Set the format to UMD for compatibility with direct script tag loading
         format: 'umd',
-        name: 'Auth0CustomLoginBundle', // A global variable name your bundle will expose (can be anything)
+        // A global variable name your bundle will expose (can be anything, e.g., 'Auth0CustomLoginBundle')
+        name: 'Auth0CustomLoginBundle',
         
-        // Ensure filenames are static (no hashes) as you requested and docs imply
-        entryFileNames: 'index.js', // Output main.js as index.js
-        chunkFileNames: 'chunks/[name].js', // Put other chunks in a 'chunks' subfolder
-        assetFileNames: 'assets/[name].[ext]', // For CSS and other assets
-        
-        // If your code relies on global variables (like React being available as 'window.React'),
-        // you might need a 'globals' map here, but often 'umd' handles common cases.
+        // Ensure the main JavaScript bundle is named 'index.js'
+        entryFileNames: 'index.js',
+        // Place other code-split chunks in a 'chunks' subfolder without hashes
+        chunkFileNames: 'chunks/[name].js',
+        // Place assets (like CSS) in an 'assets' subfolder without hashes
+        assetFileNames: 'assets/[name].[ext]',
       },
     },
     minify: true,
     emptyOutDir: true,
-    // cssCodeSplit: false, // Keep CSS in a single file - already configured
-    // sourcemap: true, // Keep sourcemaps if desired for debugging, but remove for production
-    cssCodeSplit: false, // Ensure all CSS is bundled into one file as style.css
+    cssCodeSplit: false, // Keep CSS in a single file
+    sourcemap: true, // Keep sourcemaps for debugging if needed, remove for smaller production size
   },
   logLevel: "info",
 });
