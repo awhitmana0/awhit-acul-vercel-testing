@@ -3,7 +3,9 @@ import { getCurrentScreen } from "@auth0/auth0-acul-js";
 
 // Lazy load screen components for better performance
 const LoginIdScreen = React.lazy(() => import("./screens/login-id"));
-// const LoginPasswordScreen = React.lazy(() => import("./screens/LoginPassword"));
+const LoginPasswordScreen = React.lazy(() => import("./screens/login-password"));
+const LoginScreen = React.lazy(() => import("./screens/login"));
+
 // const LoginPasswordlessEmailCodeScreen = React.lazy(() => import("./screens/LoginPasswordlessEmailCode"));
 
 const App: React.FC = () => {
@@ -26,10 +28,10 @@ const App: React.FC = () => {
     switch (screen) {
       case "login-id":
         return <LoginIdScreen />;
-      // case "login-password":
-      //   return <LoginPasswordScreen />;
-      // case "login-passwordless-email-code":
-      //   return <LoginPasswordlessEmailCodeScreen />;
+      case "login-password":
+        return <LoginPasswordScreen />;
+      case "login":
+        return <LoginScreen />;
       default:
         // Fallback for screens not explicitly handled or initial state
         return <>No screen rendered</>;
@@ -37,28 +39,12 @@ const App: React.FC = () => {
   };
 
   return (
-    // This div applies the main split-screen layout.
-    // The CSS for 'acul-split-layout', 'acul-left-panel', and 'acul-right-panel'
-    // will define the visual appearance.
-    <div className="acul-split-layout">
-      {/* Left Panel: Contains static branding and optional links */}
-      <div className="acul-left-panel">
-        <div className="acul-logo">
-          Acme Inc
-          {/* This 'Login' link is placed here to match the screenshot's top-right of left panel */}
-          <a href="#" className="acul-login-link">Login</a>
-        </div>
-        {/* The quote text would go here if desired, but is removed as per request */}
-      </div>
-
-      {/* Right Panel: Contains the dynamically rendered login/signup screen */}
-      <div className="acul-right-panel">
-        {/* Suspense is used for lazy-loaded components */}
-        <Suspense fallback={<div>Loading...</div>}>
-          {renderScreen()}
-        </Suspense>
-      </div>
-    </div>
+    // The App component now directly renders the screen,
+    // and the centering/layout will be handled by the screen component itself
+    // or global CSS applied to #root/body.
+    <Suspense fallback={<div>Loading...</div>}>
+      {renderScreen()}
+    </Suspense>
   );
 };
 

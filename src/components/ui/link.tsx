@@ -1,3 +1,5 @@
+"use client";
+
 import { cva, VariantProps } from "class-variance-authority";
 import * as React from "react";
 import { cn } from "@/lib/utils";
@@ -28,19 +30,22 @@ export interface LinkProps
   extends React.AnchorHTMLAttributes<HTMLAnchorElement>,
     VariantProps<typeof linkVariants> {}
 
-function Link(
-  { className, children, variant, underline, ...props }: LinkProps,
-  ref: React.Ref<HTMLAnchorElement> | undefined,
-) {
-  return (
-    <a
-      ref={ref}
-      className={cn(linkVariants({ variant, underline }), className)}
-      {...props}
-    >
-      {children}
-    </a>
-  );
-}
+// The Link function itself is designed to receive a ref
+// It must be wrapped with React.forwardRef at the export.
+const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
+  ({ className, children, variant, underline, ...props }, ref) => {
+    return (
+      <a
+        ref={ref}
+        className={cn(linkVariants({ variant, underline }), className)}
+        {...props}
+      >
+        {children}
+      </a>
+    );
+  },
+);
+
+Link.displayName = "Link"; // Good practice for debugging
 
 export { Link };

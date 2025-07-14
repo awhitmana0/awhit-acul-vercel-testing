@@ -17,15 +17,16 @@ const LoginIdScreen: React.FC = () => {
   applyAuth0Theme(loginIdInstance);
 
   return (
-    // Removed the outer div with classes like "min-h-screen flex items-center justify-center px-10 py-20".
-    // The parent layout (in App.tsx) will now control the positioning and sizing.
-    // The Card component itself will be styled to fit within the .acul-right-panel.
-    <Card className="w-full max-w-[400px]">
-      <Header />
-      <IdentifierForm />
-      <Footer />
-      <AlternativeLogins />
-    </Card>
+    // Re-introducing the centering classes for the main card layout.
+    // Tailwind classes for full height, flex centering, and padding.
+    <div className="min-h-screen flex items-center justify-center px-10 py-20">
+      <Card className="w-full max-w-[400px] rounded-lg shadow-xl"> {/* Added rounded-lg and shadow-xl for modern look */}
+        <Header />
+        <IdentifierForm />
+        <Footer />
+        <AlternativeLogins />
+      </Card>
+    </div>
   );
 };
 
